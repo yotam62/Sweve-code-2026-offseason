@@ -16,6 +16,11 @@ public class Robot extends TimedRobot {
   public static ArrayList<String> DisconnectedMotorNames = new ArrayList<String>();
 
   private final RobotContainer m_robotContainer;
+    
+  //these decide whether we will disable a limelight
+  public static boolean useLimelightFour = true;
+  public static boolean useLimelightThreeGS = true;
+  public static boolean useLimelightThreeGF = true;
 
   public Robot() {
     m_robotContainer = new RobotContainer();

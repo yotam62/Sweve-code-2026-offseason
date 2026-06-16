@@ -101,7 +101,7 @@ public class VisionSubsystem extends SubsystemBase {
         }
 
 
-        if (vision.isNew_LL4 && vision.isConnected_LL4 && vision.tagCount_LL4 > 0 && Robot.useLimelightFour) {
+        if (vision.isNew_LL4 && vision.isConnected_LL4 && vision.tagCount_LL4 > 0 && Robot.useLimelightFour) { 
             SmartDashboard.putBoolean("sensor receiving data", true);
             double std_LL4 = (vision.avgDistance_LL4 * 0.02 ) / vision.tagCount_LL4;
             SmartDashboard.putNumber("std_LL4", std_LL4);
@@ -192,3 +192,4 @@ public class VisionSubsystem extends SubsystemBase {
     public void disableVision() {
         disable_all_cameras = true;
     }
+}

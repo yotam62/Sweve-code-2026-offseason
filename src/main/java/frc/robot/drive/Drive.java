@@ -3,6 +3,7 @@ package frc.robot.drive;
 import com.ctre.phoenix6.swerve.jni.SwerveJNI.ModuleState;
 
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -12,6 +13,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.SwerveConstants;
@@ -26,6 +28,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.drive.AutoAlignHubCommand;
+import frc.robot.drive.VisionSubsystem.VisionMeasurement;
 
 public class Drive extends SubsystemBase{
 
@@ -203,6 +206,30 @@ public class Drive extends SubsystemBase{
         return states;
     }
 
+    public void addVision(VisionMeasurement measurement) {
+    Vector<N3> stds = VecBuilder.fill(measurement.std()[0], measurement.std()[1], 9999999); /*  
+ makes a "certainty vector" that is baisically how much we trust the vision measurement.
+  //The first two numbers are the standard deviations of the x and y position, 
+  and the last number is the standard deviation of the rotation. The lower the error, the more we trast vison, and vice versa */
 
+ //visionLock.lock();
+    SmartDashboard.putBoolean("angle conditions", Math.abs(gyroInputs.rollDegrees) < 1 || Math.abs(gyroInputs.pitchDegrees) < 1);
+ if (Math.abs(gyroInputs.rollDegrees) < 5 && Math.abs(gyroInputs.pitchDegrees) < 5 && getGyroSpeed() < 180 && getTranslationalSpeed() < 5) {
 
-    }
+ SwervePoseEstimator.addVisionMeasurement(new Pose2d(measurement.pose().getTranslation(), getRotation()), measurement.timestamp(), stds);
+
+ if (gyroResetTimer.hasElapsed(15) && getGyroSpeed() < 1 && getTranslationalSpeed() < 0.1 && measurement.numTags() >= 2 && measurement.avgDistance() < 2.35) {
+ SwervePoseEstimator.resetRotation(Rotation2d.fromDegrees(measurement.rotationDegreees()));
+ //SmartDashboard.putBoolean("gyro reset", true);
+ gyroResetTimer.restart();
+ }
+ /// SmartDashboard.putBoolean("gyro reset", false);
+
+ 
+
+ }
+ 
+ //visionLock.unlock();
+ }
+
+}
