@@ -14,6 +14,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.SwerveConstants;
@@ -36,6 +37,7 @@ public class Drive extends SubsystemBase{
     private final Field2d m_field = new Field2d();
     public Rotation2d simRotation = new Rotation2d();
     public Rotation2d rawGyroRotation = new Rotation2d();
+    Timer gyroResetTimer = new Timer();
     
     private Twist2d twist = new Twist2d();
     public double[] odometryTimestamps = new double[] {};
@@ -63,6 +65,7 @@ public class Drive extends SubsystemBase{
     static final Lock odometryLock = new ReentrantLock();
 
     private SwerveDriveKinematics kinematics =  SwerveConstants.swerveKinematics;
+    public SwerveDrivePoseEstimator SwervePoseEstimator = new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, new Pose2d(0, 0, new Rotation2d()), VecBuilder.fill(0.005,0.005, Radians.convertFrom(5, Degrees)), VecBuilder.fill(0.05, 0.05, 999999999) );
 
 
     public Drive(Module flModule, Module blModule, Module brModule, Module frModule) {  
@@ -72,6 +75,7 @@ public class Drive extends SubsystemBase{
         modules[3] = frModule;
 
         SmartDashboard.putData("field",m_field);
+        gyroResetTimer.start();
     }
     public double getMaxLinearVelocityPerSecond() {
         return 5.0;
@@ -84,7 +88,7 @@ public class Drive extends SubsystemBase{
 
 
 
-    public SwerveDrivePoseEstimator SwervePoseEstimator = new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, new Pose2d(0, 0, new Rotation2d()), VecBuilder.fill(0.005,0.005, Radians.convertFrom(5, Degrees)), VecBuilder.fill(0.05, 0.05, 999999999) );
+
     private boolean wasGyroDisconnected = false;
     SysIdRoutine routine;
 
@@ -142,8 +146,14 @@ public class Drive extends SubsystemBase{
     
 
     // Use the angle delta from the kinematics and module deltas
+    if (Gyro.connected) {
+    // Use the real gyro angle
+    rawGyroRotation = Gyro.odometryYawPositions[i];
+    } else {
+    // Use the angle delta from the kinematics and module deltas
     Twist2d twist = kinematics.toTwist2d(moduleDeltas);
-    rawGyroRotation = rawGyroRotation.plus(new Rotation2d(twist.dtheta)); //TODo: change this to the if else
+    rawGyroRotation = rawGyroRotation.plus(new Rotation2d(twist.dtheta));
+    }
     
     
     
@@ -213,8 +223,8 @@ public class Drive extends SubsystemBase{
   and the last number is the standard deviation of the rotation. The lower the error, the more we trast vison, and vice versa */
 
  //visionLock.lock();
-    SmartDashboard.putBoolean("angle conditions", Math.abs(gyroInputs.rollDegrees) < 1 || Math.abs(gyroInputs.pitchDegrees) < 1);
- if (Math.abs(gyroInputs.rollDegrees) < 5 && Math.abs(gyroInputs.pitchDegrees) < 5 && getGyroSpeed() < 180 && getTranslationalSpeed() < 5) {
+    SmartDashboard.putBoolean("angle conditions", Math.abs(Gyro.rollDegrees) < 1 || Math.abs(Gyro.pitchDegrees) < 1);
+ if (Math.abs(Gyro.rollDegrees) < 5 && Math.abs(Gyro.pitchDegrees) < 5 && getGyroSpeed() < 180 && getTranslationalSpeed() < 5) {
 
  SwervePoseEstimator.addVisionMeasurement(new Pose2d(measurement.pose().getTranslation(), getRotation()), measurement.timestamp(), stds);
 
@@ -230,6 +240,29 @@ public class Drive extends SubsystemBase{
  }
  
  //visionLock.unlock();
+ }
+
+  public double getGyroSpeed() {
+    return Math.abs(Units.radiansToDegrees(Gyro.yawVelocityRadPerSec));
+ }
+
+  public double getTranslationalSpeed() {
+    return Math.hypot(getChassisSpeeds().vxMetersPerSecond, getChassisSpeeds().vyMetersPerSecond);
+ }
+  
+ public void setPose(Pose2d pose) {
+ odometryLock.lock();
+ SwervePoseEstimator.resetPosition(rawGyroRotation, getModulePositions(), pose); 
+
+ odometryLock.unlock();
+ }
+
+  private SwerveModulePosition[] getModulePositions() {
+ SwerveModulePosition[] states = new SwerveModulePosition[4];
+ for (int i = 0; i < 4; i++) {
+ states[i] = modules[i].getPosition();
+ }
+ return states;
  }
 
 }

@@ -61,6 +61,12 @@ public class RobotContainer {
       )); 
 
       controller.x().onTrue(FeedforwardCharacterization.feedforwardCommand(drive, controller.getHID()));
+      controller.button(8).onTrue(
+        Commands.runOnce(() -> drive.setPose(
+          new Pose2d(
+            drive.SwervePoseEstimator.getEstimatedPosition().getTranslation(), 
+            DriverStation.getAlliance().get().equals(Alliance.Blue) ? Rotation2d.kZero : Rotation2d.fromDegrees(180))), 
+            drive));
     }
   //   pathBuilder = new FollowPath.Builder(
   //       drive,

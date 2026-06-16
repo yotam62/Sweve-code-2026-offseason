@@ -26,7 +26,7 @@ public interface Module {
         // //  public double turnAppliedVolts = 0.0;
         // // public double turnCurrentAmps = 0.0;
 
-      public double[] odometryTimestamps = new double[] {0.0};
+      public static final double[] odometryTimestamps = new double[] {0.0};
         // public double[] odometryDrivePositionsRad = new double[] {};
         // public Rotation2d[] odometryTurnPositions = new Rotation2d[] {};
         
