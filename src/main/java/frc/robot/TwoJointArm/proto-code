@@ -1,0 +1,35 @@
+The classes I need:
+a class in constats to hold the constants of the arm, motors, physics etc.
+    (length weight and all other physical propertys of both the arm parts,
+    motor ID's, 
+    motor constraints (can I sim a motor like an x60 just with regular code?),
+    PID and feedforward values
+    )
+a class that is the subsystem and touches all of the motors
+    it needs to have a periodic wheere everything runs, 
+    all of the methods shouldn't be in this class (right?)
+    and it should only have that periodic and a constructor.
+
+    in the constructor:
+        all of the motors, sensors and motor Id's
+        what params should be? I think no params bcs there are constants (maybe use logged tunable values like cheesy poofs)
+        PID and feedforward values
+
+    in the periodic:
+        updating all the motor/encoders/sensor values (how will I do that with sim?)
+        updating a value of where the arm should be and where it is
+        calling methods to calculate the voltage to send to the motors
+        sending the voltage to the motors
+        running a PID loop
+
+a class (command) that accepts the pose we want to be in and (pose2d or just an xz/yz?)
+and then creates the angle we need for each axis. using the sine and stuff from the mechanical advantage post
+
+a class (command) that accepts the angle we need for each axis and generates a path (what type would a path be?)
+it can have a couple of states, for complexity and optimization against computational strength and my understanding of physics.
+should I create one class for this with big if/else or an enum to determine complexitystates or a couple of different classes?
+
+a class (command) that accepts the trajectory we want to follow and gives us the voltage we need to give to the motors.
+how will that work?
+
+a class to deal w sim and and given a voltage create the deltas (later)
