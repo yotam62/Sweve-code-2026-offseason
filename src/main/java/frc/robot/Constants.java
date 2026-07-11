@@ -11,6 +11,7 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.RobotBase;
 
@@ -162,7 +163,33 @@ public final class Constants {
   }
 
   public class ArmConstants {
-    
+
+    //physical constants
+    public static final double shoulderLength = 0; // meters
+    public static final double shoulderMass = 0; // kilograms
+    public static final double shoulderCGistance = 0; // meters
+    public static final double shoulderMOI = 0; // moment of inertia
+    public static final double elbowLength = 0; // meters
+    public static final double elbowMass = 0; // kilograms
+    public static final double elbowCGistance = 0; // meters
+    public static final double elbowMOI = 0;// moment of inertia
+
+    // Motor and gearbox constants
+    public static final double shoulderGearRatio = 1; // gear ratio
+    public static final int shoulderMotorID = 0; // motor ID
+    public static final double elbowGearRatio = 1; // gear ratio
+    public static final int elbowMotorID = 1; // motor ID
+
+    // PID and feedforward gains
+    public static final DCMotor shoulderMotor = DCMotor.getKrakenX60(1).withReduction(shoulderGearRatio); 
+    public static final double shoulderKg = (shoulderMass * 9.81 * shoulderCGistance * shoulderMotor.rOhms) /  shoulderMotor.KtNMPerAmp; 
+    public static final double shoulderKv = 1 / shoulderMotor.KvRadPerSecPerVolt; 
+    public static final double shoulderKa = (shoulderMOI * shoulderMotor.rOhms) / shoulderMotor.KtNMPerAmp;
+    public static final DCMotor elbowMotor = DCMotor.getKrakenX60(1).withReduction(elbowGearRatio); 
+    public static final double elbowKg = (elbowMass * 9.81 * elbowCGistance * elbowMotor.rOhms) /elbowMotor.KtNMPerAmp ; 
+    public static final double elbowKv = 1 / elbowMotor.KvRadPerSecPerVolt; 
+    public static final double elbowKa = (elbowMOI * elbowMotor.rOhms) / elbowMotor.KtNMPerAmp;
+
   }
 
 
