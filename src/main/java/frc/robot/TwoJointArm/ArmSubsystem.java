@@ -4,14 +4,28 @@ import frc.robot.Constants.ArmConstants;
 
 public class ArmSubsystem {
 
-    public record jointAngles( double shoulderAngle, double elbowAngle) {}
+    public record jointXZToAngles(double shoulderAngle, double elbowAngle) {}
+    public record jointAnglesToXZ(double x, double z) {}
+
 
     public ArmSubsystem(ArmConstants constants) {
 
 
     }
 
-    public jointAngles getJointAngles(ArmPose pose) {
+    public jointAnglesToXZ getXZ(double shoulderAngle, double elbowAngle){
+        double shoulderLength = ArmConstants.shoulderLength;
+        double elbowLength = ArmConstants.elbowLength;
+        Double XValue;
+        Double ZValue;
+
+        XValue = Math.cos(shoulderAngle) + shoulderLength*Math.cos(shoulderAngle)+ elbowLength*Math.cos(elbowAngle+shoulderAngle);
+        ZValue = Math.sin(shoulderAngle) + shoulderLength*Math.sin(shoulderAngle)+ elbowLength*Math.sin(elbowAngle+shoulderAngle);
+
+        return new jointAnglesToXZ(XValue, ZValue);
+    }
+
+    public jointXZToAngles getJointAngles(ArmPose pose) {
         double x = pose.x;
         double z = pose.z;
         double shoulderLength = ArmConstants.shoulderLength;
@@ -25,7 +39,7 @@ public class ArmSubsystem {
         elbowAngle = -Math.acos(cosineElbowAngle);
         shoulderAngle = Math.atan2(z, x) + Math.atan2(elbowLength*Math.sin(elbowAngle), shoulderLength + elbowLength*Math.cos(elbowAngle));
 
-        return new jointAngles(shoulderAngle, cosineElbowAngle);
+        return new jointXZToAngles(shoulderAngle, cosineElbowAngle);
 
     }
 }
