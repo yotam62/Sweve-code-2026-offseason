@@ -33,11 +33,11 @@ PID and feedforward gains: proportional and derivative gains for the shoulder an
 
 ARM POSE
 
-A small data type, not a Command. Holds three values, an x coordinate, a y coordinate, and a wrist angle. Deliberately not built from the standard field-position types, because those assume a point on the flat field, which is not what this is. This is a point in the arm's vertical plane, plus a wrist angle that is not part of that plane's rotation.
+A small data type, not a Command. Holds three values, an x coordinate, a z coordinate, and a wrist angle. Deliberately not built from the standard field-position types, because those assume a point on the flat field, which is not what this is. This is a point in the arm's vertical plane, plus a wrist angle that is not part of that plane's rotation.
 
 Open question, flagged rather than assumed: everything else in this plan treats the arm as two links, shoulder and elbow. Where does the wrist actually live, is it a third joint solved together with the other two, or a separate simpler mechanism with its own trivial position command. Decide this before writing the real kinematics and dynamics math, since it changes what the trajectory waypoint type needs to hold.
 
-ARM STATE
+ARM Point Trajectory
 
 A data type representing one trajectory waypoint. Holds four values, the shoulder angle, the elbow angle, the shoulder angular velocity, and the elbow angular velocity. This same shape is used both as the goal fed into a trajectory generator and as the sample read back out of one at a given moment in time.
 
