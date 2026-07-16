@@ -185,10 +185,23 @@ public final class Constants {
     public static final double shoulderKg = (shoulderMass * 9.81 * shoulderCGistance * shoulderMotor.rOhms) /  shoulderMotor.KtNMPerAmp; 
     public static final double shoulderKv = 1 / shoulderMotor.KvRadPerSecPerVolt; 
     public static final double shoulderKa = (shoulderMOI * shoulderMotor.rOhms) / shoulderMotor.KtNMPerAmp;
+
     public static final DCMotor elbowMotor = DCMotor.getKrakenX60(1).withReduction(elbowGearRatio); 
     public static final double elbowKg = (elbowMass * 9.81 * elbowCGistance * elbowMotor.rOhms) /elbowMotor.KtNMPerAmp ; 
     public static final double elbowKv = 1 / elbowMotor.KvRadPerSecPerVolt; 
     public static final double elbowKa = (elbowMOI * elbowMotor.rOhms) / elbowMotor.KtNMPerAmp;
+
+    public static final double shoulderMaxVelocity = 1; //rad/sec
+    public static final double shoulderMaxAcceleration = 1; //rad/sec^2
+
+    public static final double shoulderMaxDeceleration = 1; //rad/sec^2
+    public static final double elbowMaxDeceleration = 1; //rad/sec^2
+
+    public static final double elbowMaxVelocity = 1; //rad/sec
+    public static final double elbowMaxAcceleration = 1; //rad/sec^2
+
+    public static final double dt = 0.02; // seconds
+    public static final double PointsPerPath = 25; // number of points in the trajectory
 
   }
 
