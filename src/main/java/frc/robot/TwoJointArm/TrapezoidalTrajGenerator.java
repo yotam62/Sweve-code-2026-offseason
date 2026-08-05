@@ -7,7 +7,7 @@ import frc.robot.Constants;
 
 public class TrapezoidalTrajGenerator implements TrajGeneratorInterface {
 
-
+    // Everything needed to sample one joint's motion at any time t.
     private record JointProfile(
         double startAngle,
         double goalAngle,
