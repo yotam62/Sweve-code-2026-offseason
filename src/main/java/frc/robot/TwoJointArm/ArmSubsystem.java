@@ -1,52 +1,35 @@
 package frc.robot.TwoJointArm;
 
-import edu.wpi.first.math.system.plant.DCMotor;
-import frc.robot.Constants.ArmConstants;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.TwoJointArm.ArmIO.ArmIOinputs;
 
-public class ArmSubsystem {
+
+public class ArmSubsystem extends SubsystemBase {
 
     public record jointXZ(double shoulderAngle, double elbowAngle) {}
     public record jointAngles(double x, double z) {}
 
-    DCMotor shoulderMotor = new DCMotor(12, 7.09, 366, 2, 6000, 1);
-    DCMotor elbowMotor = new DCMotor(12, 7.09, 366, 2, 6000, 1);
+    private final ArmIO io;
+    private final ArmIOinputs inputs = new ArmIOinputs();
 
-    public ArmSubsystem() {
-
-
+    public ArmSubsystem(ArmIO io) {
+        this.io = io;
     }
 
-    public jointAngles getXZ(double shoulderAngle, double elbowAngle){
-        double shoulderLength = ArmConstants.shoulderLength;
-        double elbowLength = ArmConstants.elbowLength;
-        Double XValue;
-        Double ZValue;
-
-        XValue = shoulderLength*Math.cos(shoulderAngle) + elbowLength*Math.cos(shoulderAngle+elbowAngle);
-        ZValue = shoulderLength*Math.sin(shoulderAngle) + elbowLength*Math.sin(shoulderAngle+elbowAngle);
-
-        return new jointAngles(XValue, ZValue);
+    @Override
+    public void periodic() {
+        io.updateInputs(inputs);
     }
 
-    public jointXZ getJointAngles(ArmPose pose) {
-        double x = pose.x;
-        double z = pose.z;
-        double shoulderLength = ArmConstants.shoulderLength;
-        double elbowLength = ArmConstants.elbowLength;
-        double elbowAngle;
-        double shoulderAngle;
-        double cosineElbowAngle;
-
-        cosineElbowAngle = ((x*x + z*z -shoulderLength*shoulderLength - elbowLength*elbowLength)/(2*elbowLength*shoulderLength));
-        cosineElbowAngle = Math.max(-1, Math.min(1, cosineElbowAngle));
-        elbowAngle = -Math.acos(cosineElbowAngle);
-        shoulderAngle = Math.atan2(z, x) - Math.atan2(elbowLength*Math.sin(elbowAngle), shoulderLength + elbowLength*Math.cos(elbowAngle));
-
-        return new jointXZ(shoulderAngle, elbowAngle);
-
+    public void setVolatge(double shoulderVolts, double elbowVolts) {
+        io.setVoltage(shoulderVolts, elbowVolts);
     }
 
-    public void setShoulderMotorVelocity(double Velocity) {
-        
+    public ArmPointTraj getcurrentState(){
+        return new ArmPointTraj(
+        inputs.shoulderAngle, inputs.elbowAngle,
+        inputs.shoulderVelocity, inputs.elbowVelocity,
+        0,0
+        );
     }
 }
