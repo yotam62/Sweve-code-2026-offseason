@@ -27,6 +27,7 @@ public class TrajectoryFollower extends Command {
     }
 
     public void initialize() {
+        trajTimer.restart();
         trajTimer.start();
         Point = 0;
 
@@ -36,7 +37,7 @@ public class TrajectoryFollower extends Command {
         JointVoltages jointVoltages;
         double elbowVoltage;
         double shoulderVoltage;
-        double Time = trajTimer.getTimestamp();
+        double Time = trajTimer.get();
         ArmPointTraj currentPoint = traj.sample(Time);
         jointVoltages = KinematicsDynamics.getNeededVoltage(currentPoint);
         elbowVoltage = jointVoltages.elbowVoltage();
@@ -44,6 +45,17 @@ public class TrajectoryFollower extends Command {
 
         Arm.setVolatge(shoulderVoltage, elbowVoltage);
 
+
+    }
+
+    public boolean isFinished() {
+        return (Math.abs((((traj.waypoints().get(traj.waypoints().size() -1)).elbowAngle()) - Arm.getcurrentState().elbowAngle())) < 0.03) && (Math.abs((((traj.waypoints().get(traj.waypoints().size() -1)).shoulderAngle()) - Arm.getcurrentState().shoulderAngle())) < 0.03);
+    }
+
+    public void end(boolean interrupted) {
+        Arm.setVolatge(0, 0);
+        trajTimer.stop();
+        trajTimer.reset();
 
     }
 
