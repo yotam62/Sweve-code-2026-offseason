@@ -1,16 +1,12 @@
 package frc.robot.drive;
 
-import java.text.NumberFormat;
 import java.util.LinkedList;
 import java.util.List;
-
-import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.drive.Drive;
 
 public class FeedforwardCharacterization  {
     

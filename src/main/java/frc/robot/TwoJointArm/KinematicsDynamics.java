@@ -38,7 +38,7 @@ public class KinematicsDynamics {
 
     }
 
-    public JointVoltages getNeededVoltage(ArmPointTraj DesiredState){
+    public static JointVoltages getNeededVoltage(ArmPointTraj DesiredState){
         //Shoulder mass matrix
         double elbowAngle = DesiredState.elbowAngle();
         double shoulderAngle = DesiredState.shoulderAngle();
@@ -51,7 +51,6 @@ public class KinematicsDynamics {
         double shoulderMass = ArmConstants.shoulderMass;
         double elbowMass = ArmConstants.elbowMass;
         double shoulderLength = ArmConstants.shoulderLength;
-        double elbowLength = ArmConstants.elbowLength;
         double shoulderCGistance = ArmConstants.shoulderCGistance;
         double elbowCGdistance = ArmConstants.elbowCGistance;
 
