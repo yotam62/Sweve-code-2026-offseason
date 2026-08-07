@@ -1,7 +1,5 @@
 /*make the motors and all the vars I need, make the constructor, the turn and drive motors. make an update input method and in the periodic run it. make a runsetpoint method */
 package frc.robot.drive;
-import frc.robot.*;
-
 import java.util.Queue;
 
 import com.ctre.phoenix6.BaseStatusSignal;
@@ -18,8 +16,6 @@ import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
-import com.ctre.phoenix6.configs.CANcoderConfiguration;
-
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
