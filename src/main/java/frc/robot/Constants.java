@@ -193,6 +193,9 @@ public final class Constants {
     public static final double dt = 0.02; // seconds
     public static final double PointsPerPath = 25; // number of points in the trajectory
 
+    public static final double shoulderStartingAngle = 0; // radians
+    public static final double elbowStartingAngle = 0; // radians
+
   }
 
 

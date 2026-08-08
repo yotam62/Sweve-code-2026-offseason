@@ -59,11 +59,9 @@ public class ModuleSim  implements Module {
     public void updateInputs() {
     // Run closed-loop control
    
-      driveAppliedVolts =
-          driveFFVolts + driveController.calculate(driveSim.getAngularVelocityRadPerSec());
+      driveAppliedVolts = driveFFVolts + driveController.calculate(driveSim.getAngularVelocityRadPerSec());
    
-
-        turnAppliedVolts = turnController.calculate(turnPosition.getRadians());
+      turnAppliedVolts = turnController.calculate(turnPosition.getRadians());
   
     // Update simulation state
     driveSim.setInputVoltage(MathUtil.clamp(driveAppliedVolts, -12.0, 12.0));
