@@ -1,6 +1,10 @@
 package frc.robot.TwoJointArm;
 
+import org.littletonrobotics.junction.AutoLog;
+
 public interface ArmIO {
+    
+    @AutoLog
     public static class ArmIOinputs{
         public double shoulderAngle;
         public double shoulderVelocity;

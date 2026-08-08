@@ -26,10 +26,10 @@ public class ArmSim implements ArmIO {
 
     
     private SimState currentState = new SimState(Constants.ArmConstants.shoulderStartingAngle, Constants.ArmConstants.elbowStartingAngle, 0, 0); // or whatever your real start angles are
-    private double appliedShoulderVoltage = 0.0;
-    private double appliedElbowVoltage = 0.0;
+    private static double appliedShoulderVoltage = 0.0;
+    private static double appliedElbowVoltage = 0.0;
 
-    public SimState getNextState(SimState previousState) {
+    public static SimState getNextState(SimState previousState) {
 
         double currentShoulderAngle = previousState.shoulderAngle();
         double currentElbowAngle = previousState.elbowAngle();
@@ -79,7 +79,7 @@ public class ArmSim implements ArmIO {
 
     @Override
     public void updateInputs(ArmIOinputs inputs) {
-        getNextState(currentState);
+        currentState = getNextState(currentState);
         inputs.elbowAngle = currentState.elbowAngle();
         inputs.elbowVelocity = currentState.elbowVelocity();
         inputs.shoulderAngle = currentState.shoulderAngle();
@@ -91,8 +91,8 @@ public class ArmSim implements ArmIO {
 
     @Override
     public void setVoltage(double shoulderVoltage, double elbowVoltage) {
-        double shoulderAppliedVoltage = shoulderVoltage;
-        double elbowAppliedVoltage = elbowVoltage;
+        appliedShoulderVoltage = shoulderVoltage;
+        appliedElbowVoltage = elbowVoltage;
     }
 
 }
