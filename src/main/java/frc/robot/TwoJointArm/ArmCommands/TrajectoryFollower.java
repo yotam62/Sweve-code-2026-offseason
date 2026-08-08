@@ -43,7 +43,7 @@ public class TrajectoryFollower extends Command {
         elbowVoltage = jointVoltages.elbowVoltage();
         shoulderVoltage = jointVoltages.shoulderVoltage();
 
-        Arm.setVolatge(shoulderVoltage, elbowVoltage);
+        Arm.setVoltage(shoulderVoltage, elbowVoltage);
 
 
     }
@@ -53,7 +53,7 @@ public class TrajectoryFollower extends Command {
     }
 
     public void end(boolean interrupted) {
-        Arm.setVolatge(0, 0);
+        Arm.setVoltage(0, 0);
         trajTimer.stop();
         trajTimer.reset();
 
