@@ -1,8 +1,12 @@
 package frc.robot;
 
 import frc.robot.lib.BLine.*;
+
+import java.util.Random;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -10,10 +14,18 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.drive.*;
 import frc.robot.Constants.SwerveConstants;
+import frc.robot.TwoJointArm.ArmPointTraj;
+import frc.robot.TwoJointArm.ArmSim;
+import frc.robot.TwoJointArm.ArmSubsystem;
+import frc.robot.TwoJointArm.TrapezoidalTrajGenerator;
+import frc.robot.TwoJointArm.ArmCommands.TrajectoryFollower;
 
 public class RobotContainer {
   public final Drive drive;
   private FollowPath.Builder pathBuilder; //  not final, initialized in constructor
+  Random random = new Random();
+  TrapezoidalTrajGenerator trajGenerator = new TrapezoidalTrajGenerator();
+  ArmSubsystem arm = new ArmSubsystem(new ArmSim());
 
   CommandXboxController controller = new CommandXboxController(0);
 
@@ -62,6 +74,7 @@ public class RobotContainer {
             drive.SwervePoseEstimator.getEstimatedPosition().getTranslation(), 
             DriverStation.getAlliance().get().equals(Alliance.Blue) ? Rotation2d.kZero : Rotation2d.fromDegrees(180))), 
             drive));
+            controller.a().onTrue(new TrajectoryFollower(trajGenerator.createTraj(arm.getcurrentState(), arm.createRandomArmPointTraj() , null), arm)); 
     }
   //   pathBuilder = new FollowPath.Builder(
   //       drive,

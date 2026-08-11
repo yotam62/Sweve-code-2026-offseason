@@ -155,14 +155,14 @@ public final class Constants {
   public class ArmConstants {
 
     //physical constants
-    public static final double shoulderLength = 0; // meters
-    public static final double shoulderMass = 0; // kilograms
-    public static final double shoulderCGistance = 0; // meters
-    public static final double shoulderMOI = 0; // moment of inertia
-    public static final double elbowLength = 0; // meters
-    public static final double elbowMass = 0; // kilograms
-    public static final double elbowCGistance = 0; // meters
-    public static final double elbowMOI = 0;// moment of inertia
+    public static final double shoulderLength = 1; // meters
+    public static final double shoulderMass = 5; // kilograms
+    public static final double shoulderCGistance = 0.5; // meters
+    public static final double shoulderMOI = 0.4174; // moment of inertia
+    public static final double elbowLength = 0.5; // meters
+    public static final double elbowMass = 2.5; // kilograms
+    public static final double elbowCGistance = 0.25; // meters
+    public static final double elbowMOI = 0.2807;// moment of inertia
 
     // Motor and gearbox constants
     public static final double shoulderGearRatio = 1; // gear ratio
@@ -184,11 +184,11 @@ public final class Constants {
     public static final double shoulderMaxVelocity = 1; //rad/sec
     public static final double shoulderMaxAcceleration = 1; //rad/sec^2
 
-    public static final double shoulderMaxDeceleration = 1; //rad/sec^2
-    public static final double elbowMaxDeceleration = 1; //rad/sec^2
+    public static final double shoulderMaxDeceleration = 0.5; //rad/sec^2
+    public static final double elbowMaxDeceleration = 0.25; //rad/sec^2
 
-    public static final double elbowMaxVelocity = 1; //rad/sec
-    public static final double elbowMaxAcceleration = 1; //rad/sec^2
+    public static final double elbowMaxVelocity = 0.5; //rad/sec
+    public static final double elbowMaxAcceleration = 0.25; //rad/sec^2
 
     public static final double dt = 0.02; // seconds
     public static final double PointsPerPath = 25; // number of points in the trajectory

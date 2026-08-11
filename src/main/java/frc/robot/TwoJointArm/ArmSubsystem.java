@@ -2,9 +2,9 @@ package frc.robot.TwoJointArm;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
-import frc.robot.TwoJointArm.ArmCommands.ArmSim;
-import frc.robot.TwoJointArm.ArmCommands.ArmSim.SimState;
 import frc.robot.TwoJointArm.ArmIO.ArmIOinputs;
+import frc.robot.TwoJointArm.ArmSim.SimState;
+import frc.robot.TwoJointArm.KinematicsDynamics.jointXZ;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
@@ -20,13 +20,13 @@ import edu.wpi.first.math.util.Units;
 
 public class ArmSubsystem extends SubsystemBase {
 
-    private final Mechanism2d armMechanism = new Mechanism2d(3, 5);
+    private final Mechanism2d armMechanism = new Mechanism2d(3, 4);
     private final MechanismRoot2d root = armMechanism.getRoot("ShoulderJoint", 1.5, 0.5);
     private final MechanismLigament2d shoulderLigament =
         root.append(new MechanismLigament2d("shoulder", ArmConstants.shoulderLength, 0, 6, new Color8Bit(Color.kRed)));
     private final MechanismLigament2d elbowLigament = shoulderLigament.append(new MechanismLigament2d("elbow", ArmConstants.elbowLength, 0, 6 ,new Color8Bit(Color.kBlue) ));
 
-    public record jointXZ(double shoulderAngle, double elbowAngle) {}
+    jointXZ currentAngles = new jointXZ(0, 0);
     public record jointAngles(double x, double z) {}
 
     ArmIO io;
@@ -60,5 +60,13 @@ public class ArmSubsystem extends SubsystemBase {
         inputs.shoulderVelocity, inputs.elbowVelocity,
         0,0
         );
+    }
+
+    public ArmPointTraj createRandomArmPointTraj() {
+        double x = Math.random() * 3.0; 
+        double z = Math.random() * 1.5; 
+        jointXZ angles = KinematicsDynamics.getJointAngles(new ArmPose(x, z,0));
+        return new ArmPointTraj(angles.shoulderAngle(), angles.elbowAngle(), 0, 0, 0, 0);
+        
     }
 }

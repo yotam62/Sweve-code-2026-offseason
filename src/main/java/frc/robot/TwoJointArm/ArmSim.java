@@ -1,10 +1,7 @@
-package frc.robot.TwoJointArm.ArmCommands;
+package frc.robot.TwoJointArm;
 
 import frc.robot.Constants;
 import frc.robot.Constants.ArmConstants;
-import frc.robot.TwoJointArm.ArmIO;
-import frc.robot.TwoJointArm.ArmPointTraj;
-import frc.robot.TwoJointArm.KinematicsDynamics;
 import frc.robot.TwoJointArm.KinematicsDynamics.JointAccelerations;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
@@ -26,10 +23,10 @@ public class ArmSim implements ArmIO {
 
     
     private SimState currentState = new SimState(Constants.ArmConstants.shoulderStartingAngle, Constants.ArmConstants.elbowStartingAngle, 0, 0); // or whatever your real start angles are
-    private static double appliedShoulderVoltage = 0.0;
-    private static double appliedElbowVoltage = 0.0;
+    private double appliedShoulderVoltage = 0.0;
+    private double appliedElbowVoltage = 0.0;
 
-    public static SimState getNextState(SimState previousState) {
+    public SimState getNextState(SimState previousState) {
 
         double currentShoulderAngle = previousState.shoulderAngle();
         double currentElbowAngle = previousState.elbowAngle();

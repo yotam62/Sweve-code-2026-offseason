@@ -49,7 +49,7 @@ public class TrajectoryFollower extends Command {
     }
 
     public boolean isFinished() {
-        return (Math.abs((((traj.waypoints().get(traj.waypoints().size() -1)).elbowAngle()) - Arm.getcurrentState().elbowAngle())) < 0.03) && (Math.abs((((traj.waypoints().get(traj.waypoints().size() -1)).shoulderAngle()) - Arm.getcurrentState().shoulderAngle())) < 0.03);
+        return trajTimer.get() >= traj.duration() && (Math.abs((((traj.waypoints().get(traj.waypoints().size() -1)).elbowAngle()) - Arm.getcurrentState().elbowAngle())) < 0.03) && (Math.abs((((traj.waypoints().get(traj.waypoints().size() -1)).shoulderAngle()) - Arm.getcurrentState().shoulderAngle())) < 0.03);
     }
 
     public void end(boolean interrupted) {

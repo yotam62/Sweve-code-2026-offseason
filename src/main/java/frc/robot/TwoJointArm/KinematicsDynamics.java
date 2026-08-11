@@ -21,7 +21,7 @@ public class KinematicsDynamics {
         return new jointAngles(XValue, ZValue);
     }
 
-    public jointXZ getJointAngles(ArmPose pose) {
+    public static jointXZ getJointAngles(ArmPose pose) {
         double x = pose.x;
         double z = pose.z;
         double shoulderLength = ArmConstants.shoulderLength;
