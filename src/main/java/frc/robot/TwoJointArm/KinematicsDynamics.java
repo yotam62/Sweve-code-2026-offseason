@@ -1,5 +1,6 @@
 package frc.robot.TwoJointArm;
 
+import edu.wpi.first.math.controller.PIDController;
 import frc.robot.Constants.ArmConstants;
 
 
@@ -8,6 +9,11 @@ public class KinematicsDynamics {
     public record jointXZ(double shoulderAngle, double elbowAngle) {}
     public record jointAngles(double x, double z) {}
     public record JointAccelerations(double shoulderAcceleration, double elbowAcceleration) {}
+
+    PIDController shoulderAnglePID = new PIDController(ArmConstants.shoulderAngleKP, ArmConstants.shoulderAngleKI, ArmConstants.shoulderAngleKD);
+    PIDController elbowAnglePID = new PIDController(ArmConstants.elbowAngleKP, ArmConstants.elbowAngleKI, ArmConstants.elbowAngleKD);
+    PIDController shoulderVelocityPID = new PIDController(ArmConstants.shoulderVelocityKP, ArmConstants.shoulderVelocityKI, ArmConstants.shoulderVelocityKD);
+    PIDController elbowVelocityPID = new PIDController(ArmConstants.elbowVelocityKP, ArmConstants.elbowVelocityKI, ArmConstants.elbowVelocityKD);
 
     public record JointVoltages(double shoulderVoltage, double elbowVoltage) {}
 
@@ -39,7 +45,7 @@ public class KinematicsDynamics {
 
     }
 
-    public static JointVoltages getNeededVoltage(ArmPointTraj DesiredState){
+    public JointVoltages getNeededVoltage(ArmPointTraj DesiredState){
         //Shoulder mass matrix
         double elbowAngle = DesiredState.elbowAngle();
         double shoulderAngle = DesiredState.shoulderAngle();
@@ -78,12 +84,24 @@ public class KinematicsDynamics {
 
     }
 
+    public JointVoltages addPID(JointVoltages voltages, ArmPointTraj DesiredState, ArmPointTraj CurrentState){
+        double shoulderAngleError = DesiredState.shoulderAngle() - CurrentState.shoulderAngle();
+        double elbowAngleError = DesiredState.elbowAngle() - CurrentState.elbowAngle();
+        double shoulderVelocityError = DesiredState.shoulderAngularVelocity() - CurrentState.shoulderAngularVelocity();
+        double elbowVelocityError = DesiredState.elbowAngularVelocity() - CurrentState.elbowAngularVelocity();
+
+        double shoulderVoltage = voltages.shoulderVoltage() + shoulderAnglePID.calculate(shoulderAngleError) + shoulderVelocityPID.calculate(shoulderVelocityError);
+        double elbowVoltage = voltages.elbowVoltage() + elbowAnglePID.calculate(elbowAngleError) + elbowVelocityPID.calculate(elbowVelocityError);
+
+        return new JointVoltages(shoulderVoltage, elbowVoltage);
+    }
+
     public static JointAccelerations getAccelerations(
         double appliedShoulderTorque, double appliedElbowTorque,
         double shoulderAngle, double elbowAngle,
         double shoulderVelocity, double elbowVelocity) {
 
-    // --- Same building blocks as getNeededVoltage, state-only, no accel needed ---
+
     double shoulderMOI = ArmConstants.shoulderMOI;
     double elbowMOI = ArmConstants.elbowMOI;
     double shoulderMass = ArmConstants.shoulderMass;

@@ -2,7 +2,9 @@ package frc.robot;
 
 import frc.robot.lib.BLine.*;
 
+import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -73,9 +75,17 @@ public class RobotContainer {
           new Pose2d(
             drive.SwervePoseEstimator.getEstimatedPosition().getTranslation(), 
             DriverStation.getAlliance().get().equals(Alliance.Blue) ? Rotation2d.kZero : Rotation2d.fromDegrees(180))), 
-            drive));
-            controller.a().onTrue(new TrajectoryFollower(trajGenerator.createTraj(arm.getcurrentState(), arm.createRandomArmPointTraj() , null), arm)); 
-    }
+            drive)); 
+            controller.a().onTrue(
+    Commands.defer(
+        () -> new TrajectoryFollower(
+            trajGenerator.createTraj(arm.getcurrentState(), arm.createRandomArmPointTraj(), List.of()),
+            arm
+        ),
+        Set.of(arm)
+    )
+);
+ }
   //   pathBuilder = new FollowPath.Builder(
   //       drive,
   //       drive::getPose,

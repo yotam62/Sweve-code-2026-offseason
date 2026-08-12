@@ -20,8 +20,8 @@ import edu.wpi.first.math.util.Units;
 
 public class ArmSubsystem extends SubsystemBase {
 
-    private final Mechanism2d armMechanism = new Mechanism2d(3, 4);
-    private final MechanismRoot2d root = armMechanism.getRoot("ShoulderJoint", 1.5, 0.5);
+    private final Mechanism2d armMechanism = new Mechanism2d(6, 8);
+    private final MechanismRoot2d root = armMechanism.getRoot("ShoulderJoint", 1.5, 2);
     private final MechanismLigament2d shoulderLigament =
         root.append(new MechanismLigament2d("shoulder", ArmConstants.shoulderLength, 0, 6, new Color8Bit(Color.kRed)));
     private final MechanismLigament2d elbowLigament = shoulderLigament.append(new MechanismLigament2d("elbow", ArmConstants.elbowLength, 0, 6 ,new Color8Bit(Color.kBlue) ));
@@ -67,6 +67,6 @@ public class ArmSubsystem extends SubsystemBase {
         double z = Math.random() * 1.5; 
         jointXZ angles = KinematicsDynamics.getJointAngles(new ArmPose(x, z,0));
         return new ArmPointTraj(angles.shoulderAngle(), angles.elbowAngle(), 0, 0, 0, 0);
-        
+
     }
 }

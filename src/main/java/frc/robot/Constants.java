@@ -181,6 +181,23 @@ public final class Constants {
     public static final double elbowKv = 1 / elbowMotor.KvRadPerSecPerVolt; 
     public static final double elbowKa = (elbowMOI * elbowMotor.rOhms) / elbowMotor.KtNMPerAmp;
 
+    public static final double shoulderAngleKP = 0.05; 
+    public static final double shoulderAngleKI = 0; 
+    public static final double shoulderAngleKD = 0;  
+
+    public static final double shoulderVelocityKP = 0;
+    public static final double shoulderVelocityKI = 0;
+    public static final double shoulderVelocityKD = 0;
+
+    public static final double elbowAngleKP = 0;
+    public static final double elbowAngleKI = 0; 
+    public static final double elbowAngleKD = 0;
+
+    public static final double elbowVelocityKP = 0.05;
+    public static final double elbowVelocityKI = 0;
+    public static final double elbowVelocityKD = 0;
+
+
     public static final double shoulderMaxVelocity = 1; //rad/sec
     public static final double shoulderMaxAcceleration = 1; //rad/sec^2
 
