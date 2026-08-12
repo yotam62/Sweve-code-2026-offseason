@@ -20,6 +20,7 @@ import frc.robot.TwoJointArm.ArmPointTraj;
 import frc.robot.TwoJointArm.ArmSim;
 import frc.robot.TwoJointArm.ArmSubsystem;
 import frc.robot.TwoJointArm.TrapezoidalTrajGenerator;
+import frc.robot.TwoJointArm.ArmCommands.StayCommand;
 import frc.robot.TwoJointArm.ArmCommands.TrajectoryFollower;
 
 public class RobotContainer {
@@ -82,9 +83,9 @@ public class RobotContainer {
             trajGenerator.createTraj(arm.getcurrentState(), arm.createRandomArmPointTraj(), List.of()),
             arm
         ),
-        Set.of(arm)
-    )
-);
+        Set.of(arm)));
+    arm.setDefaultCommand(new StayCommand(arm));
+
  }
   //   pathBuilder = new FollowPath.Builder(
   //       drive,

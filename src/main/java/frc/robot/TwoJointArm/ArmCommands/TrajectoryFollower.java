@@ -59,10 +59,6 @@ public class TrajectoryFollower extends Command {
     }
 
     public void end(boolean interrupted) {
-        JointVoltages jointVoltages = kinematics.getNeededVoltage(traj.waypoints().get(traj.waypoints().size() -1));
-        double elbowVoltage = jointVoltages.elbowVoltage();
-        double shoulderVoltage = jointVoltages.shoulderVoltage();
-        Arm.setVoltage(shoulderVoltage, elbowVoltage);
         trajTimer.stop();
         trajTimer.reset();
 
