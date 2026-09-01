@@ -84,7 +84,6 @@ public class RobotContainer {
             arm
         ),
         Set.of(arm)));
-    arm.setDefaultCommand(new StayCommand(arm));
 
  }
   //   pathBuilder = new FollowPath.Builder(
