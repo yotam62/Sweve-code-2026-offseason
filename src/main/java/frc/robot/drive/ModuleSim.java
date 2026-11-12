@@ -1,7 +1,5 @@
 package frc.robot.drive;
 
-import com.google.flatbuffers.Constants;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -9,7 +7,6 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
-import edu.wpi.first.math.trajectory.Trajectory.State;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
@@ -62,11 +59,9 @@ public class ModuleSim  implements Module {
     public void updateInputs() {
     // Run closed-loop control
    
-      driveAppliedVolts =
-          driveFFVolts + driveController.calculate(driveSim.getAngularVelocityRadPerSec());
+      driveAppliedVolts = driveFFVolts + driveController.calculate(driveSim.getAngularVelocityRadPerSec());
    
-
-        turnAppliedVolts = turnController.calculate(turnPosition.getRadians());
+      turnAppliedVolts = turnController.calculate(turnPosition.getRadians());
   
     // Update simulation state
     driveSim.setInputVoltage(MathUtil.clamp(driveAppliedVolts, -12.0, 12.0));

@@ -1,18 +1,9 @@
 package frc.robot;
 
 import com.ctre.phoenix6.configs.Slot0Configs;
-import com.ctre.phoenix6.swerve.SwerveModuleConstants;
-
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.units.measure.LinearVelocity;
-import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.math.system.plant.DCMotor;
 
 public final class Constants {
   public static final Mode simMode = Mode.SIM;
@@ -158,6 +149,69 @@ public final class Constants {
     //public static final double WheelRadius = 0.0508;
     public static final double WheelRadius = 0.049; // I don't have a carpet rn, this is just slightly lower than the real  radius of 0.0508
     public static final SwerveModuleConstants SwerveModuleConstants = null;
+
+  }
+
+  public class ArmConstants {
+
+    //physical constants
+    public static final double shoulderLength = 1; // meters
+    public static final double shoulderMass = 5; // kilograms
+    public static final double shoulderCGistance = 0.5; // meters
+    public static final double shoulderMOI = 0.4174; // moment of inertia
+    public static final double elbowLength = 0.5; // meters
+    public static final double elbowMass = 2.5; // kilograms
+    public static final double elbowCGistance = 0.25; // meters
+    public static final double elbowMOI = 0.2807;// moment of inertia
+
+    // Motor and gearbox constants
+    public static final double shoulderGearRatio = 1; // gear ratio
+    public static final int shoulderMotorID = 0; // motor ID
+    public static final double elbowGearRatio = 1; // gear ratio
+    public static final int elbowMotorID = 1; // motor ID
+
+    // PID and feedforward gains
+    public static final DCMotor shoulderMotor = DCMotor.getKrakenX60(1).withReduction(shoulderGearRatio); 
+    public static final double shoulderKg = (shoulderMass * 9.81 * shoulderCGistance * shoulderMotor.rOhms) /  shoulderMotor.KtNMPerAmp; 
+    public static final double shoulderKv = 1 / shoulderMotor.KvRadPerSecPerVolt; 
+    public static final double shoulderKa = (shoulderMOI * shoulderMotor.rOhms) / shoulderMotor.KtNMPerAmp;
+
+    public static final DCMotor elbowMotor = DCMotor.getKrakenX60(1).withReduction(elbowGearRatio); 
+    public static final double elbowKg = (elbowMass * 9.81 * elbowCGistance * elbowMotor.rOhms) /elbowMotor.KtNMPerAmp ; 
+    public static final double elbowKv = 1 / elbowMotor.KvRadPerSecPerVolt; 
+    public static final double elbowKa = (elbowMOI * elbowMotor.rOhms) / elbowMotor.KtNMPerAmp;
+
+    public static final double shoulderAngleKP = -0.05; 
+    public static final double shoulderAngleKI = 0; 
+    public static final double shoulderAngleKD = 0;  
+
+    public static final double shoulderVelocityKP = 0;
+    public static final double shoulderVelocityKI = 0;
+    public static final double shoulderVelocityKD = 0;
+
+    public static final double elbowAngleKP = 0;
+    public static final double elbowAngleKI = 0; 
+    public static final double elbowAngleKD = 0;
+
+    public static final double elbowVelocityKP = -0.05;
+    public static final double elbowVelocityKI = 0;
+    public static final double elbowVelocityKD = 0;
+
+
+    public static final double shoulderMaxVelocity = 1; //rad/sec
+    public static final double shoulderMaxAcceleration = 1; //rad/sec^2
+
+    public static final double shoulderMaxDeceleration = 0.5; //rad/sec^2
+    public static final double elbowMaxDeceleration = 0.25; //rad/sec^2
+
+    public static final double elbowMaxVelocity = 0.5; //rad/sec
+    public static final double elbowMaxAcceleration = 0.25; //rad/sec^2
+
+    public static final double dt = 0.02; // seconds
+    public static final double PointsPerPath = 25; // number of points in the trajectory
+
+    public static final double shoulderStartingAngle = 0; // radians
+    public static final double elbowStartingAngle = 0; // radians
 
   }
 

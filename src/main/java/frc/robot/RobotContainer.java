@@ -1,24 +1,34 @@
 package frc.robot;
 
 import frc.robot.lib.BLine.*;
-import edu.wpi.first.math.controller.PIDController;
+
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.drive.*;
 import frc.robot.Constants.SwerveConstants;
+import frc.robot.TwoJointArm.ArmPointTraj;
+import frc.robot.TwoJointArm.ArmSim;
+import frc.robot.TwoJointArm.ArmSubsystem;
+import frc.robot.TwoJointArm.TrapezoidalTrajGenerator;
+import frc.robot.TwoJointArm.ArmCommands.StayCommand;
+import frc.robot.TwoJointArm.ArmCommands.TrajectoryFollower;
 
 public class RobotContainer {
   public final Drive drive;
-  private FollowPath.Builder pathBuilder; // ← not final, initialized in constructor
+  private FollowPath.Builder pathBuilder; //  not final, initialized in constructor
+  Random random = new Random();
+  TrapezoidalTrajGenerator trajGenerator = new TrapezoidalTrajGenerator();
+  ArmSubsystem arm = new ArmSubsystem(new ArmSim());
 
   CommandXboxController controller = new CommandXboxController(0);
 
@@ -61,7 +71,21 @@ public class RobotContainer {
       )); 
 
       controller.x().onTrue(FeedforwardCharacterization.feedforwardCommand(drive, controller.getHID()));
-    }
+      controller.button(8).onTrue(
+        Commands.runOnce(() -> drive.setPose(
+          new Pose2d(
+            drive.SwervePoseEstimator.getEstimatedPosition().getTranslation(), 
+            DriverStation.getAlliance().get().equals(Alliance.Blue) ? Rotation2d.kZero : Rotation2d.fromDegrees(180))), 
+            drive)); 
+            controller.a().onTrue(
+    Commands.defer(
+        () -> new TrajectoryFollower(
+            trajGenerator.createTraj(arm.getcurrentState(), arm.createRandomArmPointTraj(), List.of()),
+            arm
+        ),
+        Set.of(arm)));
+
+ }
   //   pathBuilder = new FollowPath.Builder(
   //       drive,
   //       drive::getPose,
